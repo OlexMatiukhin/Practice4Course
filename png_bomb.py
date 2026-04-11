@@ -54,11 +54,13 @@ def create_png_bomb(width, height, filename, mode='gray'):
 
     remaining = height - 1
     if remaining > 0:
-        up_batch = up_line * batch_count    # allocate once, reuse
+        up_batch = up_line * batch_count        # allocate once, reuse
+
         while remaining >= batch_count:
             parts.append(comp.compress(up_batch))
             remaining -= batch_count
             print(remaining)
+
         if remaining > 0:
             parts.append(comp.compress(up_line * remaining))
 
