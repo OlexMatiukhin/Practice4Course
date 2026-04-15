@@ -158,7 +158,7 @@ if __name__ == '__main__':
     import time
 
     DEPTH = 500   # уровней вложенности
-    WIDTH = 500  # объектов на каждом уровне
+    WIDTH = 5000  # объектов на каждом уровне
 
     print(f"PDF Bomb: depth={DEPTH}, width={WIDTH}")
     print(f"Теоретически объектов при полной распаковке: {WIDTH**DEPTH:,}")
