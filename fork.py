@@ -39,7 +39,7 @@ def child_process():
     p.join()
 
 
-
-main_child = multiprocessing.Process(target=child_process)
-main_child.start()
-main_child.join()
+if __name__ == "__main__":
+    main_child = multiprocessing.Process(target=child_process)
+    main_child.start()
+    main_child.join()
