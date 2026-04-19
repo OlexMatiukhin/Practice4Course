@@ -2,7 +2,7 @@ import multiprocessing
 import threading
 import os
 import time
-SIZE = 5000
+SIZE = 100000000
 
 def final_workload():
     """Финальный процесс, который нагружает ядро"""
