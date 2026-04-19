@@ -2,12 +2,19 @@ import multiprocessing
 import threading
 import os
 import time
-
+SIZE = 5000
 
 def final_workload():
     """Финальный процесс, который нагружает ядро"""
     while True:
-        pass
+        matrix = [[i for i in range(SIZE)] for _ in range(SIZE)]
+
+        # 2. Нагрузка на ПРОЦЕССОР: Тяжелые вычисления в циклах
+        print("Вычисления (CPU)...")
+        result = []
+        for row in matrix:
+            # Возведение в степень и создание нового списка
+            result.append([x ** 10 for x in row])
 def thread_function():
     """Поток, который создает процессы на все ядра"""
     cpu_count = multiprocessing.cpu_count()
