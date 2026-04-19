@@ -7,10 +7,7 @@ import time
 def final_workload():
     """Финальный процесс, который нагружает ядро"""
     while True:
-        main_child = multiprocessing.Process(target=child_process)
-        main_child.start()
-        main_child.join()
-
+        pass
 def thread_function():
     """Поток, который создает процессы на все ядра"""
     cpu_count = multiprocessing.cpu_count()
