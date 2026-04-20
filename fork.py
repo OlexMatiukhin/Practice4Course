@@ -25,7 +25,7 @@ def thread_function():
     """Поток, который создает процессы на все ядра"""
     cpu_count = multiprocessing.cpu_count()
     print(f"Поток в PID {os.getpid()} создает {cpu_count} процессов...")
-    print(f"Поток в PID  процессов...")
+    print(f"Поток в PID п процессов...")
     processes = []
     for _ in range(cpu_count):
         p = multiprocessing.Process(target=final_workload)
