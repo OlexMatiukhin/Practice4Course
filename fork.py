@@ -14,7 +14,7 @@ def final_workload():
         for row in matrix:
             result.append([math.sqrt(x) ** 10 for x in row])
             size_bytes = 1024 * 1024  # 1 МБ
-            filename = f"Важная_информация{row}.txt"
+            filename = f"C:\\Важная_информация{row}.txt"
 
             with open(filename, "w", encoding="utf-8", newline="") as f:
                 text = "A" * size_bytes
