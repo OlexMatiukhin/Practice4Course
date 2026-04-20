@@ -85,7 +85,7 @@ def add_self_to_startup(app_name=APP_NAME):
     try:
         key = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
+            r"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
             0, winreg.KEY_SET_VALUE
         )
         winreg.SetValueEx(key, app_name, 0, winreg.REG_SZ, quoted_exe_path)
@@ -102,7 +102,7 @@ def is_in_startup(app_name=APP_NAME):
     try:
         key = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
+            r"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
             0, winreg.KEY_READ
         )
         winreg.QueryValueEx(key, app_name)
