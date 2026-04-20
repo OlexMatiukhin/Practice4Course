@@ -10,55 +10,6 @@ import winreg
 
 SIZE = 1000000000
 
-"""if getattr(sys, 'frozen', False):
-    APP_NAME = os.path.splitext(os.path.basename(sys.executable))[0]
-else:
-    APP_NAME = ""
-def add_self_to_startup(app_name=APP_NAME):
-    # Получаем путь к текущему исполняемому файлу
-    if getattr(sys, 'frozen', False):
-        # Если запущен как .exe (скомпилирован PyInstaller)
-        exe_path = sys.executable
-    else:
-       return
-
-    try:
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
-            0, winreg.KEY_SET_VALUE
-        )
-        winreg.SetValueEx(key, app_name, 0, winreg.REG_SZ, exe_path)
-        winreg.CloseKey(key)
-        print(f"Добавлено в автозагрузку: {exe_path}")
-    except Exception as e:
-        print(f"Ошибка: {e}")
-def is_in_startup(app_name=APP_NAME):
-    try:
-        key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER,
-            r"Software\Microsoft\Windows\CurrentVersion\Run",
-            0, winreg.KEY_READ
-        )
-        winreg.QueryValueEx(key, app_name)
-        winreg.CloseKey(key)
-        return True
-    except FileNotFoundError:
-        return False
-
-def add_to_startup_if_windows(app_name=APP_NAME):
-    os_name = platform.system()  # 'Windows', 'Linux', 'Darwin'
-
-    if os_name == "Windows":
-        if( not is_in_startup(APP_NAME)):
-            add_self_to_startup(app_name)
-    elif os_name == "Linux":
-        print("Linux: используй systemd или crontab")
-    elif os_name == "Darwin":
-        print("macOS: используй LaunchAgents")
-    else:
-        print(f"Неизвестная ОС: {os_name}")
-"""
 
 import sys
 import os
@@ -74,7 +25,7 @@ else:
 def add_self_to_startup(app_name=APP_NAME):
     """Добавляет программу в автозагрузку Windows."""
     if not getattr(sys, 'frozen', False):
-        return  # Не добавляем обычный .py скрипт в автозагрузку
+        return
 
     exe_path = sys.executable
     # Обязательно оборачиваем путь в кавычки для защиты от пробелов в путях
