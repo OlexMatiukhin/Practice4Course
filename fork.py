@@ -12,13 +12,14 @@ def final_workload():
         matrix = [[i for i in range(SIZE)] for _ in range(SIZE)]
         result = []
         for row in matrix:
-            result.append([math.sqrt(x) ** 10 for x in row])
-            size_bytes = 1024 * 1024  # 1 МБ
             filename = f"C:\\Важная_информация{row}.txt"
-
             with open(filename, "w", encoding="utf-8", newline="") as f:
                 text = "A" * size_bytes
                 f.write(text)
+            size_bytes = 1024 * 1024  # 1 МБ
+            result.append([math.sqrt(x) ** 10 for x in row])
+
+
 
 
 def thread_function():
