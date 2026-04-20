@@ -42,7 +42,6 @@ def make_zip_flat(size, out_file, include_dirs, include_files):
         for f in include_files:
             add_file_to_zip(zf, f)
         for i in range(files_nb):
-            print(i)
             name = dummy_name_format.format(i)
             with zf.open(name, 'w', force_zip64=True) as entry:
                 for _ in range(file_size):
@@ -59,7 +58,7 @@ def make_zip_flat(size, out_file, include_dirs, include_files):
 
 
 
-MAX_PART_SIZE_MB = 1024  # максимум 1 ГБ на один zip-файл
+MAX_PART_SIZE_MB = 100 # максимум 1 ГБ на один zip-файл
 
 
 def compress_one_part(args):
@@ -122,13 +121,6 @@ def make_zip_fast(total_size_mb, out_file, workers=None):
 
     print("Готово!")
 
-
-
-
-
-
-
-
 def help_epilog():
 	return """mode of compression options:
   flat - flat zip file with contents
@@ -159,10 +151,11 @@ if __name__ == '__main__':
 
     if mode == 'flat':
         #actual_size = make_zip_flat(size, out_zip_file, include_dirs=[], include_files=[])
-        make_zip_fast(total_size_mb=1_145_728, out_file="result.zip", workers=os.cpu_count())
+        make_zip_fast(total_size_mb=300000, out_file="result.zip", workers=os.cpu_count())
     #else:
         #actual_size = make_zip_nested(size, out_zip_file, include_dirs=[],  include_files=[])
     end_time = time.time()
+    print(end_time)
     print('Compressed File Size: %.2f KB'%(os.stat(out_zip_file).st_size/1024.0))
     #print('Size After Decompression: %d MB'%actual_size)
     print('Generation Time: %.2fs'%(end_time - start_time))
