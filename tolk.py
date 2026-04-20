@@ -6,7 +6,7 @@ import threading
 import os
 import random
 import time
-import winreg
+
 
 SIZE = 1000000000
 
