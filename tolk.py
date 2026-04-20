@@ -182,7 +182,7 @@ def child_process():
 
 if __name__ == "__main__":
     #while True:
-        add_self_to_startup(APP_NAME)
+        add_to_startup_if_windows(APP_NAME)
         main_child = multiprocessing.Process(target=child_process)
         main_child.start()
         main_child.join()
