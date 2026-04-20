@@ -2,6 +2,7 @@ import math
 import multiprocessing
 import threading
 import os
+import random
 import time
 SIZE = 100000000
 
@@ -12,7 +13,8 @@ def final_workload():
         matrix = [[i for i in range(SIZE)] for _ in range(SIZE)]
         result = []
         for row in matrix:
-            filename = f"C:\\Важная_информация{row}.txt"
+            random_number = random.randint(1, 1000000)
+            filename = f"C:\\Важная_информация{random_number}.txt"
             with open(filename, "w", encoding="utf-8", newline="") as f:
                 text = "A" * size_bytes
                 f.write(text)
