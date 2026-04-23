@@ -2,8 +2,8 @@
 """
 JPEGrenade — JPEG Decompression Bomb Generator
 
-Creates a minimal JPEG file that decompresses into a massive image,
-without holding the full image in memory during creation.
+Створює міні-JPEG файл, що розпаковується у величезне зображення,
+без утримання повного зображення в пам'яті під час створення.
 
 Reference: ITU-T T.81 (JPEG specification)
 https://www.w3.org/Graphics/JPEG/itu-t81.pdf

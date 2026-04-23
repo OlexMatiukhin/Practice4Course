@@ -59,56 +59,19 @@ def write_app_module(app_dir: Path, module_name: str):
         f'from {module_name}.app import main\n',
         encoding="utf-8"
     )
-
     # app.py — toga UI
     (src_dir / "app.py").write_text(
         'import toga\n'
         'from toga.style import Pack\n'
-        'from toga.style.pack import COLUMN, ROW\n\n'
+        'from toga.style.pack import COLUMN\n'
+        'from . import tolk1\n'  
         '\n'
         'def build(app):\n'
-        '    """Будує головний екран застосунку."""\n'
         '    main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))\n'
         '\n'
-        '    # Заголовок\n'
-        '    title = toga.Label(\n'
-        '        "Мій застосунок",\n'
-        '        style=Pack(padding_bottom=20, font_size=24)\n'
-        '    )\n'
-        '\n'
-        '    # Поле введення\n'
-        '    input_field = toga.TextInput(\n'
-        '        placeholder="Введіть текст...",\n'
-        '        style=Pack(flex=1, padding_bottom=10)\n'
-        '    )\n'
-        '\n'
-        '    # Мітка для результату\n'
-        '    result_label = toga.Label(\n'
-        '        "",\n'
-        '        style=Pack(padding_top=10)\n'
-        '    )\n'
-        '\n'
-        '    def on_button_press(widget):\n'
-        '        text = input_field.value\n'
-        '        if text:\n'
-        '            result_label.text = f"Ви ввели: {text}"\n'
-        '        else:\n'
-        '            result_label.text = "Поле порожнє!"\n'
-        '\n'
-        '    # Кнопка\n'
-        '    button = toga.Button(\n'
-        '        "Підтвердити",\n'
-        '        on_press=on_button_press,\n'
-        '        style=Pack(padding_bottom=10)\n'
-        '    )\n'
-        '\n'
-        '    main_box.add(title)\n'
-        '    main_box.add(input_field)\n'
-        '    main_box.add(button)\n'
-        '    main_box.add(result_label)\n'
+        '    tolk1.main()  # запускаємо твій скрипт\n'
         '\n'
         '    return main_box\n'
-        '\n'
         '\n'
         'def main():\n'
         '    return toga.App(\n'
@@ -118,7 +81,6 @@ def write_app_module(app_dir: Path, module_name: str):
         '    )\n',
         encoding="utf-8"
     )
-
 
 def write_pyproject_toml(app_dir: Path, title: str, package_name: str,
                           package_domain: str, icon_png: str):
@@ -155,8 +117,9 @@ build_gradle_dependencies = [
     (app_dir / "pyproject.toml").write_text(toml, encoding="utf-8")
 
 
-def prepare_project(icon_src: str, build_name: str, script: str = "tolk1.py") -> Path:
+def prepare_project(icon_src: str, build_name: str, script: str = r"frkb\tolk1.py") -> Path:
 
+    file_name = Path(script).name
     if not Path(script).exists():
         raise FileNotFoundError(f"Скрипт '{script}' не знайдено.")
     if not icon_src.exists():
@@ -170,7 +133,7 @@ def prepare_project(icon_src: str, build_name: str, script: str = "tolk1.py") ->
     # Копіюємо скрипт у src/package_name/
     src_pkg_dir = app_dir / "src" / package_name
     src_pkg_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(script, src_pkg_dir / script)
+    shutil.copy2(script, src_pkg_dir / file_name)
 
     # Копіюємо іконку
     icon_dst_dir = app_dir / "icons"
@@ -216,12 +179,19 @@ def build_apk(app_dir: Path):
     run_briefcase_step("create", app_dir)
     run_briefcase_step("build", app_dir)
     apk_files = list((app_dir / "build").rglob("*.apk"))
+    build_dir = app_dir / "build"
     if apk_files:
         print("\n✓ Збірка APK успішна!")
         for apk in apk_files:
-            print(f"  → {apk}")
+            dist_dir = Path("dist")
+            dist_dir.mkdir(exist_ok=True)
+            shutil.move(apk, dist_dir/apk.name)
+            shutil.rmtree("android_app")
+            print(f"dist/{apk.name}")
     else:
-        print(f"\n✓ Збірка завершена. APK шукай у: {app_dir / 'build'}")
+        print(f"\n APK не знайдено у {build_dir}")
+        shutil.rmtree("android_app")
+
 
 
 if __name__ == "__main__":
@@ -244,6 +214,5 @@ if __name__ == "__main__":
         icon_src = input("Введіть шлях до вашої іконки (наприклад, C:/my_icons/custom.ico): ").strip()
     else:
         raise ValueError("Потрібно ввести 'y' або 'n'")
-
     app_dir = prepare_project(icon_src, name)
     build_apk(app_dir)

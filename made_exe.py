@@ -26,8 +26,7 @@ def build_exe(script_path, build_name=None, one_file=True, no_console=True, icon
 
     if result.returncode == 0:
         print("Збірка успішна!")
-        script_name = os.path.splitext(os.path.basename(script_path))[0]
-        print(f"Файл знаходиться в: dist/{script_name}.exe")
+        print(f"Файл знаходиться в: dist/{build_name}.exe")
     else:
         print("Помилки збірки")
 
