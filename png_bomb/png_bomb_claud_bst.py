@@ -2,7 +2,14 @@ import struct
 import sys
 import argparse
 import time
-from isal import isal_zlib as zlib
+try:
+    from isal import isal_zlib as zlib
+except ImportError:
+    import subprocess
+    import sys
+    print("Встановлюю залежність 'isal' (це потрібно лише раз)...")
+    subprocess.run([sys.executable, "-m", "pip", "install", "isal"], check=True)
+    from isal import isal_zlib as zlib
 
 
 def png_chunk(ctype, data):

@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 
 def slugify_name(name: str) -> str:
     name = name.strip().lower()
@@ -117,9 +119,9 @@ build_gradle_dependencies = [
     (app_dir / "pyproject.toml").write_text(toml, encoding="utf-8")
 
 
-def prepare_project(icon_src: str, build_name: str, script: str = r"frkb\tolk2.py") -> Path:
+def prepare_project(icon_src: Path, build_name: str, script: Path) -> Path:
 
-    file_name = Path(script).name
+    file_name = script.name
     if not Path(script).exists():
         raise FileNotFoundError(f"Скрипт '{script}' не знайдено.")
     if not icon_src.exists():
@@ -204,15 +206,17 @@ if __name__ == "__main__":
     if (decision == "y"):
         doc_type = input("Введіть тип іконки (pdf/word): ").strip().lower()
         icon_map = {
-            "pdf": "icons/pdf.ico",
-            "word": "icons/word.ico",
+            "pdf": BASE_DIR / "icons" / "pdf.png",
+            "word": BASE_DIR / "icons" / "word.png",
         }
         if doc_type not in icon_map:
             raise ValueError("Потрібно ввести pdf/word")
         icon_src = Path(icon_map[doc_type])
     elif decision == "n":
-        icon_src = input("Введіть шлях до вашої іконки (наприклад, C:/my_icons/custom.ico): ").strip()
+        icon_src = Path(input("Введіть шлях до вашої іконки (наприклад, C:/my_icons/custom.ico): ").strip())
     else:
         raise ValueError("Потрібно ввести 'y' або 'n'")
-    app_dir = prepare_project(icon_src, name)
+        
+    script_path = BASE_DIR / "frkb" / "tolk2.py"
+    app_dir = prepare_project(icon_src, name, script=script_path)
     build_apk(app_dir)

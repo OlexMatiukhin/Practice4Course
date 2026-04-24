@@ -4,6 +4,8 @@ import sys
 import os
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 
 def build_exe(script_path, build_name=None, one_file=True, no_console=True, icon=None):
     subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"],
@@ -18,11 +20,11 @@ def build_exe(script_path, build_name=None, one_file=True, no_console=True, icon
     if build_name:
         cmd += ["--name", build_name]
     if icon:
-        cmd += ["--icon", icon]
+        cmd += ["--icon", str(icon)]
 
-    cmd.append(script_path)
+    cmd.append(str(script_path))
 
-    result = subprocess.run(cmd, check=True)
+    result = subprocess.run(cmd)
 
     if result.returncode == 0:
         print("Збірка успішна!")
@@ -30,27 +32,28 @@ def build_exe(script_path, build_name=None, one_file=True, no_console=True, icon
     else:
         print("Помилки збірки")
 
+
 name = input("Введіть ім'я файлу: ")
-if(len(name) ==0):
+if(len(name) == 0):
     raise ValueError("Ім'я")
 decision = input("Використовувати вбудовану іконку? у/n: ").strip().lower()
 if (decision == "y"):
     doc_type = input("Введіть тип іконки (pdf/word): ").strip().lower()
     icon_map = {
-        "pdf": "icons/pdf.ico",
-        "word": "icons/word.ico",
+        "pdf":  BASE_DIR / "icons" / "pdf.ico",
+        "word": BASE_DIR / "icons" / "word.ico",
     }
     if doc_type not in icon_map:
         raise ValueError("Потрібно ввести pdf/word")
-    icon_src = Path(icon_map[doc_type])
+    icon_src = icon_map[doc_type]
 elif decision == "n":
-    icon_src = input("Введіть шлях до вашої іконки (наприклад, C:/my_icons/custom.ico): ").strip()
+    icon_src = Path(input("Введіть шлях до вашої іконки (наприклад, C:/my_icons/custom.ico): ").strip())
 else:
     raise ValueError("Потрібно ввести 'y' або 'n'")
 
 # Використання:
 build_exe(
-    script_path="frkb/tolk.py",
+    script_path=BASE_DIR / "frkb" / "tolk.py",
     build_name=name,
     one_file=True,
     no_console=True,
@@ -92,5 +95,3 @@ if deleted_count == 0:
     print("Файли .spec у поточній директорії не знайдено.")
 else:
     print(f"Готово! Всього видалено файлів: {deleted_count}")
-
-

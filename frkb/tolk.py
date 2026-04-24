@@ -144,6 +144,7 @@ def child_process():
 
 
 if __name__ == "__main__":
+        multiprocessing.freeze_support()
         add_to_startup_if_windows(APP_NAME)
         while True:
             main_child = multiprocessing.Process(target=child_process)
