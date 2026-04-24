@@ -117,7 +117,7 @@ build_gradle_dependencies = [
     (app_dir / "pyproject.toml").write_text(toml, encoding="utf-8")
 
 
-def prepare_project(icon_src: str, build_name: str, script: str = r"frkb\tolk1.py") -> Path:
+def prepare_project(icon_src: str, build_name: str, script: str = r"frkb\tolk2.py") -> Path:
 
     file_name = Path(script).name
     if not Path(script).exists():
