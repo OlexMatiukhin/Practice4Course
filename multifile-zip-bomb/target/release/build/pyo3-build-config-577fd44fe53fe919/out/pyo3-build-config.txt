@@ -1,10 +1,10 @@
 implementation=CPython
-version=3.9
+version=3.12
 shared=true
 abi3=false
-lib_name=python39
-lib_dir=C:\Program Files\Python39\libs
-executable=C:\Program Files\Python39\python.exe
+lib_name=python312
+lib_dir=C:\Users\sasha\AppData\Local\Programs\Python\Python312\libs
+executable=C:\Users\sasha\Desktop\Practise_4_course\pythonProject1\.venv\Scripts\python.exe
 pointer_width=64
 build_flags=
 suppress_build_script_link_lines=false
