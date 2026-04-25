@@ -105,7 +105,7 @@ sources = [
     "src/{package_name}",
 ]
 requires = [
-    "toga",
+    "toga-android",
 ]
 
 [tool.briefcase.app.{package_name}.android]
