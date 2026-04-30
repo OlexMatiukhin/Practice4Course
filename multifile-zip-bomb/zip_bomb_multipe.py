@@ -192,8 +192,8 @@ def _run_backward_python(num_files, kernel_size, kernel_comp, kernel_uncomp):
 
 def generate_zip_file(
     filename:    str = "bomb.zip",
-    num_files:   int = 1_000_000,
-    kernel_size: int = 1024 * 1024,
+    num_files:   int = 1_000_00,
+    kernel_size: int = 10*1024 * 1024,
 ):
     if not filename.lower().endswith('.zip'):
         filename += '.zip'

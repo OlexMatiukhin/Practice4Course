@@ -413,9 +413,9 @@ class App(tk.Tk):
 
         r = 0
         ent_width  = self._row(frame, "Ширина (px):", r, lambda p: ttk.Entry(p)); r += 1
-        ent_width.insert(0, "1000000")
+        ent_width.insert(0, "100000")
         ent_height = self._row(frame, "Висота (px):", r, lambda p: ttk.Entry(p)); r += 1
-        ent_height.insert(0, "1000000")
+        ent_height.insert(0, "100000")
         cmb_mode   = self._row(frame, "Режим кольору:", r,
                                lambda p: ttk.Combobox(p, values=["gray", "rgb", "rgba"], state="readonly")); r += 1
         cmb_mode.set("rgba")

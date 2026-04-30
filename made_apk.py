@@ -56,22 +56,32 @@ def write_app_module(app_dir: Path, module_name: str):
     src_dir = app_dir / "src" / module_name
     src_dir.mkdir(parents=True, exist_ok=True)
 
-    # __init__.py — точка входу для briefcase
+    # __init__.py — точка входу для пакета
     (src_dir / "__init__.py").write_text(
         f'from {module_name}.app import main\n',
         encoding="utf-8"
     )
+
+    # __main__.py — точка входу для виконання (ТЕ, ЧОГО НЕ ВИСТАЧАЛО)
+    (src_dir / "__main__.py").write_text(
+        f'from {module_name}.app import main\n'
+        f'\n'
+        f'if __name__ == "__main__":\n'
+        f'    main().main_loop()\n',
+        encoding="utf-8"
+    )
+
     # app.py — toga UI
     (src_dir / "app.py").write_text(
         'import toga\n'
         'from toga.style import Pack\n'
         'from toga.style.pack import COLUMN\n'
-        'from . import tolk1\n'  
+        'from . import tolk2\n'
         '\n'
         'def build(app):\n'
         '    main_box = toga.Box(style=Pack(direction=COLUMN, padding=20))\n'
         '\n'
-        '    tolk1.main()  # запускаємо твій скрипт\n'
+        '    tolk2.main()  # запускаємо твій скрипт\n'
         '\n'
         '    return main_box\n'
         '\n'
@@ -83,7 +93,6 @@ def write_app_module(app_dir: Path, module_name: str):
         '    )\n',
         encoding="utf-8"
     )
-
 def write_pyproject_toml(app_dir: Path, title: str, package_name: str,
                           package_domain: str, icon_png: str):
     icon_path = str(Path(icon_png).with_suffix("")).replace("\\", "/")
